@@ -55,7 +55,7 @@ $(document).on("click", ".delete", deleteTrain);
 
 function deleteTrain() {
     var deleteKey = $(this).attr("id");
-    console.log($(this).attr("id"));
+    // console.log($(this).attr("id"));
     database.ref().child(deleteKey).remove();
 
     updateHTML();
@@ -97,7 +97,7 @@ function updateHTML() {
                 frequency = (childData.frequency);
                 key = (childKey);
                 // Console.loging the last user's data
-                console.log(childData);
+                // console.log(childData);
 
                 setHTML();
 
@@ -109,7 +109,7 @@ function updateHTML() {
         },
         // Handle the errors
         function(errorObject) {
-            console.log("Errors handled: " + errorObject.code);
+            // console.log("Errors handled: " + errorObject.code);
         });
 }
 
@@ -117,7 +117,7 @@ function updateHTML() {
 function time() {
     // Current Time
     currentTime = moment().format("hh:mm");
-    console.log("CURRENT TIME:  " + currentTime);
+    // console.log("CURRENT TIME:  " + currentTime);
     // First Time (pushed back 1 year to make sure it comes before current time)
     var firstArrivalConverted = moment(firstArrival, "hh:mm").subtract(1, "years");
     // Difference between the times
@@ -126,10 +126,10 @@ function time() {
     var tRemainder = diffTime % frequency;
     // Minute Until Train
     minAway = frequency - tRemainder;
-    console.log("MINUTES TILL TRAIN: " + minAway);
+    // console.log("MINUTES TILL TRAIN: " + minAway);
     // Next Train
     arrivalTime = moment().add(minAway, "minutes").format("hh:mm");
-    console.log("ARRIVAL TIME: " + arrivalTime);
+    // console.log("ARRIVAL TIME: " + arrivalTime);
 }
 
 function clock() {
