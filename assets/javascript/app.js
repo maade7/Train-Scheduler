@@ -74,7 +74,7 @@ database.ref().once("value", function(snapshot) {
 function setHTML() {
     time();
     $(".jumbotron h1").html(currentTime);
-
+    // make Train array
     var row = $("<tr>").attr("data-key", key);
     row.append($("<td>" + name + "</td>"))
         .append($("<td>" + destination + "</td>"))
@@ -87,7 +87,6 @@ function setHTML() {
 }
 
 function updateHTML() {
-    $("tbody").empty();
     database.ref().once("value", function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 var childKey = childSnapshot.key;
@@ -99,10 +98,12 @@ function updateHTML() {
                 key = (childKey);
                 // Console.loging the last user's data
                 console.log(childData);
-                // Change the HTML to reflect
+
                 setHTML();
 
             });
+            // Change the HTML to reflect
+            $("tbody").empty();
             $("tbody").append(rows);
             rows = [""];
         },
