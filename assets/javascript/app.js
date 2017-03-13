@@ -109,7 +109,7 @@ function updateHTML() {
         },
         // Handle the errors
         function(errorObject) {
-            // console.log("Errors handled: " + errorObject.code);
+            console.log("Errors handled: " + errorObject.code);
         });
 }
 
