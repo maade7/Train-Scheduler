@@ -13,6 +13,7 @@ firebase.initializeApp(config);
 var database = firebase.database();
 
 // Initial Values
+var interval = "";
 var currentTime = "";
 var name = "";
 var destination = "";
@@ -20,6 +21,8 @@ var firstArrival = "";
 var frequency = "";
 var minAway = "";
 var arrivalTime = "";
+var count = "";
+var rows = [""];
 
 // Capture Button Click
 $("#submit-btn").on("click", function(event) {
@@ -36,52 +39,77 @@ $("#submit-btn").on("click", function(event) {
     $("#firstArrival-input").val("");
     $("#frequency-input").val("");
 
-
-
     // Code for handling the push
     database.ref().push({
         name: name,
         destination: destination,
         firstArrival: firstArrival,
         frequency: frequency,
-    });
 
+
+    });
+    updateHTML();
 });
 
+$(document).on("click", ".delete", deleteTrain);
 
-database.ref().on("child_added", function(snapshot) {
-    var snapshotVal = snapshot.val();
+function deleteTrain() {
+    var deleteKey = $(this).attr("id");
+    console.log($(this).attr("id"));
+    database.ref().child(deleteKey).remove();
 
-    name = (snapshotVal.name);
-    destination = (snapshotVal.destination);
-    firstArrival = (snapshotVal.firstArrival);
-    frequency = (snapshotVal.frequency);
-    key = (snapshot.key);
-    // Console.loging the last user's data
-    console.log(snapshotVal);
+    updateHTML();
 
-    // Change the HTML to reflect
-    updateHTML()
+}
 
-    // Handle the errors
+database.ref().once("value", function(snapshot) {
+    clock();
+    updateHTML();
+    // // Handle the errors
 }, function(errorObject) {
     console.log("Errors handled: " + errorObject.code);
 });
 
 
-function updateHTML() {
-    time()
-
-    $(".jumbotron p").html(currentTime);
+function setHTML() {
+    time();
+    $(".jumbotron h1").html(currentTime);
 
     var row = $("<tr>").attr("data-key", key);
     row.append($("<td>" + name + "</td>"))
         .append($("<td>" + destination + "</td>"))
         .append($("<td>" + frequency + "</td>"))
         .append($("<td>" + arrivalTime + "</td>"))
-        .append($("<td>" + minAway + "</td>"));
+        .append($("<td>" + minAway + "</td>"))
+        .append($('<button type="button" class="btn btn-warning btn-xs delete" id="' + key + '">Delete</button>'));
 
-    $("tbody").append(row);
+    rows.push(row);
+}
+
+function updateHTML() {
+    $("tbody").empty();
+    database.ref().once("value", function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+                var childKey = childSnapshot.key;
+                var childData = childSnapshot.val();
+                name = (childData.name);
+                destination = (childData.destination);
+                firstArrival = (childData.firstArrival);
+                frequency = (childData.frequency);
+                key = (childKey);
+                // Console.loging the last user's data
+                console.log(childData);
+                // Change the HTML to reflect
+                setHTML();
+
+            });
+            $("tbody").append(rows);
+            rows = [""];
+        },
+        // Handle the errors
+        function(errorObject) {
+            console.log("Errors handled: " + errorObject.code);
+        });
 }
 
 
@@ -101,4 +129,10 @@ function time() {
     // Next Train
     arrivalTime = moment().add(minAway, "minutes").format("hh:mm");
     console.log("ARRIVAL TIME: " + arrivalTime);
+}
+
+function clock() {
+    interval = setInterval(function() {
+        updateHTML();
+    }, 60000);
 }
