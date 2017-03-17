@@ -81,7 +81,7 @@ function setHTML() {
         .append($("<td>" + frequency + "</td>"))
         .append($("<td>" + arrivalTime + "</td>"))
         .append($("<td>" + minAway + "</td>"))
-        .append($('<button type="button" class="btn btn-warning btn-xs delete" id="' + key + '">Delete</button>'));
+        .append($('<td><button type="button" class="btn btn-warning btn-xs delete" id="' + key + '">Delete</button></td>'));
 
     rows.push(row);
 }
